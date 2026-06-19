@@ -22,9 +22,12 @@ class ExternalDataToolFactory:
         :param config: the form config data
         :return:
         """
-        extension_class = code_based_extension.extension_class(ExtensionModule.EXTERNAL_DATA_TOOL, name)
-        # FIXME mypy issue here, figure out how to fix it
-        extension_class.validate_config(tenant_id, config)  # type: ignore
+        from core.external_data_tool.base import ExternalDataTool
+        extension_class = cast(
+            type[ExternalDataTool],
+            code_based_extension.extension_class(ExtensionModule.EXTERNAL_DATA_TOOL, name)
+        )
+        extension_class.validate_config(tenant_id, config)
 
     def query(self, inputs: Mapping[str, Any], query: str | None = None) -> str:
         """
